@@ -1,0 +1,28 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Environments / tooling
+.venv/
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+.mise.local.toml
+mise.local.toml
+
+# ClawBio is cloned by `mise run setup` at the commit pinned in mise.toml
+vendor/
+
+# Data / outputs (share large files another way)
+data/raw/
+data/cache/
+outputs/
+*.pdf
+
+.DS_Store
+
+# Personal Claude Code overrides
+.claude/settings.local.json

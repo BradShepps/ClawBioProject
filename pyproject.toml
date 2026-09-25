@@ -1,0 +1,56 @@
+[project]
+name = "genomic-equity-agent"
+version = "0.1.0"
+description = "Agent that evaluates genomics papers for population diversity and equity"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    # ClawBio (editable from vendor/ClawBio): biopython, pandas, numpy, scipy,
+    # scikit-learn, matplotlib, openai, and the equity/lit/pubmed skills
+    "clawbio",
+
+    # LLM providers + agent tooling
+    "anthropic",
+    "claude-agent-sdk",
+    "openai",
+    "pydantic",           # structured outputs / typed rubric scores
+    "tenacity",           # retry on rate limits
+
+    # Finding + reading papers
+    "httpx",              # PubMed / Europe PMC / bioRxiv / Semantic Scholar APIs
+    "pymupdf",            # PDF -> text
+    "pymupdf4llm",        # PDF -> LLM-friendly markdown (tables, headings)
+    "lxml",               # PMC / JATS XML full text
+
+    # Data processing
+    "polars",
+    "pyarrow",
+    "duckdb",
+    "seaborn",
+
+    # Utilities
+    "python-dotenv",      # load .env when running outside mise
+    "rich",
+    "tqdm",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel",
+    "jupyterlab",
+    "pytest",
+    "ruff",
+]
+
+[tool.uv]
+package = false       # app, not a library — no build step
+default-groups = ["dev"]
+# Mirrors ClawBio's own override (see vendor/ClawBio/pyproject.toml): keeps
+# liknorm out of the graph so cryptography isn't downgraded.
+override-dependencies = ["liknorm ; sys_platform == 'clawbio-never'"]
+
+[tool.uv.sources]
+clawbio = { path = "vendor/ClawBio", editable = true }
+
+[tool.ruff]
+line-length = 100

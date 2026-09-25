@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(/mise.toml)",
+      "Edit(/pyproject.toml)",
+      "Edit(/uv.lock)",
+      "Edit(/.env.example)",
+      "Edit(/.gitignore)",
+      "Edit(/README.md)",
+      "Edit(/CLAUDE.md)",
+      "Edit(/scripts/fetch_clawbio.sh)",
+      "Edit(/scripts/check_env.py)",
+      "Edit(/.claude/**)",
+      "Bash(pip install *)",
+      "Bash(uv pip install *)"
+    ],
+    "ask": [
+      "Bash(uv add *)",
+      "Bash(uv remove *)",
+      "Bash(uv lock *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/protect_skeleton.py\"",
+            "timeout": 10,
+            "statusMessage": "Checking skeleton protection"
+          }
+        ]
+      }
+    ]
+  }
+}

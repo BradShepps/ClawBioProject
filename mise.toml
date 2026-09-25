@@ -1,0 +1,41 @@
+# Team setup: `mise trust && mise run setup`
+# mise installs the pinned tools, loads .env, and activates .venv on cd.
+
+[tools]
+python = "3.13"   # ClawBio supports 3.11–3.13; 3.14 wheels are spotty for sci deps
+uv = "latest"
+
+[env]
+# Load API keys from .env (created from .env.example by `mise run setup`)
+_.file = { path = ".env", redact = true }
+# Auto-activate the uv-managed virtualenv whenever you cd into the project
+_.python.venv = { path = ".venv", create = false }
+# Pinned ClawBio commit so everyone runs identical code. Bump deliberately.
+CLAWBIO_REPO = "https://github.com/ClawBio/ClawBio.git"
+CLAWBIO_REF = "b360efaf46fd76c603b81b08f756c2e8ac6eb85d"
+
+[tasks.setup]
+description = "One-shot setup: clone ClawBio, create .venv, install deps, create .env"
+run = [
+  "bash scripts/fetch_clawbio.sh",
+  "uv sync",
+  "[ -f .env ] || (cp .env.example .env && echo 'Created .env — add your API keys there.')",
+  "uv run python scripts/check_env.py",
+]
+
+[tasks.sync]
+description = "Re-install deps after pulling changes to pyproject.toml / uv.lock"
+run = "uv sync"
+
+[tasks.check]
+description = "Verify imports and show which API keys are configured"
+run = "uv run python scripts/check_env.py"
+
+[tasks.demo]
+description = "Run ClawBio's equity-scorer demo to confirm everything works"
+dir = "vendor/ClawBio"
+run = "uv run --project ../.. python clawbio.py run equity --demo"
+
+[tasks.notebook]
+description = "Launch JupyterLab"
+run = "uv run jupyter lab"
