@@ -1,8 +1,6 @@
 # Genomic Equity Agent
 
-Hackathon project: an agent that evaluates genomics research papers for population diversity and
-equity (who was studied, how ancestry is reported, whether findings generalize). Built on ClawBio,
-which is cloned into `vendor/ClawBio` at a pinned commit and installed editable.
+Hackathon project: A pipeline that computes polygenic risk scores from a genotype file and a PGS Catalog score ID, then audits whether the resulting percentile is actually interpretable for that individual. It cross-references the sample's genetic ancestry against the populations the score was developed and evaluated in, and applies a deterministic gate that returns one of three outcomes: report the percentile, report the raw score only, or abstain entirely. The goal is to make a PRS say nothing rather than say something confidently wrong for people outside its reference population.
 
 ## Protected skeleton — do not modify
 
